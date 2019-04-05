@@ -1,10 +1,14 @@
 package org.zenika.zba.zbameasurement.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.zenika.zba.zbameasurement.database.InfluxDbRepository;
 import org.zenika.zba.zbameasurement.model.Measure;
 
@@ -12,6 +16,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import static com.google.common.base.Predicates.equalTo;
 
 @Service
 @EnableScheduling
@@ -31,7 +37,7 @@ public class IotController {
         getTemp();
     }
 
-    @Scheduled(fixedDelay = 10000)
+    /*@Scheduled(fixedDelay = 10000)
     private void getTemp() {
         curl = "curl -X GET http://192.168.1.96:8090/rest/temp";
         processBuilder = new ProcessBuilder(curl.split(" "));
@@ -48,6 +54,15 @@ public class IotController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println(measure.toString());
+        influxDb.insertMeasure(measure);
+    }*/
+
+    @Scheduled(fixedDelay = 10000)
+    private void getTemp() {
+        RestTemplate restTemplate =new RestTemplate();
+        String url = "http://192.168.1.96:8090/rest/temp";
+        Measure measure = restTemplate.getForObject(url, Measure.class);
         System.out.println(measure.toString());
         influxDb.insertMeasure(measure);
     }
