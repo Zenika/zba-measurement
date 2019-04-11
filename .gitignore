@@ -1,5 +1,6 @@
-### NPM ###
-/node_modules/
+/target/
+.mvn/
+/classes/
 
 ### STS ###
 .apt_generated
