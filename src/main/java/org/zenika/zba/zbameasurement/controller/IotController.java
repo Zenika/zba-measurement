@@ -61,7 +61,7 @@ public class IotController {
     @Scheduled(fixedDelay = 10000)
     private void getTemp() {
         RestTemplate restTemplate =new RestTemplate();
-        String url = "http://192.168.1.96:8090/rest/temp";
+        String url = "http://192.168.1.57:8090/rest/temp";
         Measure measure = restTemplate.getForObject(url, Measure.class);
         System.out.println(measure.toString());
         influxDb.insertMeasure(measure);
